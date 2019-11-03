@@ -76,7 +76,7 @@
     <IntDir>$(SolutionDir)intermediates\$(Platform)\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(Platform)</TargetName>
     <IncludePath>$(SolutionDir)dependencies\include\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)dependencies\libs\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)dependencies\lib\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -84,7 +84,7 @@
     <IntDir>$(SolutionDir)intermediates\$(Platform)\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(Platform)</TargetName>
     <IncludePath>$(SolutionDir)dependencies\include\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)dependencies\libs\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)dependencies\lib\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -92,7 +92,7 @@
     <IntDir>$(SolutionDir)intermediates\$(Platform)\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(Platform)</TargetName>
     <IncludePath>$(SolutionDir)dependencies\include\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)dependencies\libs\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)dependencies\lib\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -100,7 +100,7 @@
     <IntDir>$(SolutionDir)intermediates\$(Platform)\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(Platform)</TargetName>
     <IncludePath>$(SolutionDir)dependencies\include\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)dependencies\libs\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)dependencies\lib\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -118,7 +118,7 @@
       <AdditionalDependencies>glew32.lib;opengl32.lib;SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy "$(SolutionDir)dependencies\dlls" "$(OutDir)" /Y /I
+      <Command>xcopy "$(SolutionDir)dependencies\dll" "$(OutDir)" /Y /I
 xcopy "$(SolutionDir)assets" "$(OutDir)assets" /Y /I</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -138,7 +138,7 @@ xcopy "$(SolutionDir)assets" "$(OutDir)assets" /Y /I</Command>
       <AdditionalDependencies>glew32.lib;opengl32.lib;SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy "$(SolutionDir)dependencies\dlls" "$(OutDir)" /Y /I
+      <Command>xcopy "$(SolutionDir)dependencies\dll" "$(OutDir)" /Y /I
 xcopy "$(SolutionDir)assets" "$(OutDir)assets" /Y /I</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -162,7 +162,7 @@ xcopy "$(SolutionDir)assets" "$(OutDir)assets" /Y /I</Command>
       <AdditionalDependencies>glew32.lib;opengl32.lib;SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy "$(SolutionDir)dependencies\dlls" "$(OutDir)" /Y /I
+      <Command>xcopy "$(SolutionDir)dependencies\dll" "$(OutDir)" /Y /I
 xcopy "$(SolutionDir)assets" "$(OutDir)assets" /Y /I</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -186,12 +186,19 @@ xcopy "$(SolutionDir)assets" "$(OutDir)assets" /Y /I</Command>
       <AdditionalDependencies>glew32.lib;opengl32.lib;SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy "$(SolutionDir)dependencies\dlls" "$(OutDir)" /Y /I
+      <Command>xcopy "$(SolutionDir)dependencies\dll" "$(OutDir)" /Y /I
 xcopy "$(SolutionDir)assets" "$(OutDir)assets" /Y /I</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Application.cpp" />
     <ClCompile Include="GamesProgramming.cpp" />
+    <ClCompile Include="Log.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Application.h" />
+    <ClInclude Include="Log.h" />
+    <ClInclude Include="pch.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
