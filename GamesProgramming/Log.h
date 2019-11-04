@@ -1,5 +1,7 @@
 #pragma once
 
+const std::string ASSET_PATH = "assets/";
+
 #ifdef _DEBUG
 #define LOG_DEBUG(msg) Log::Debug(msg, __FILE__, __LINE__)
 #define GL_ATTEMPT(func) func; \
