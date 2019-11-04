@@ -3,6 +3,7 @@
 #include "Log.h"
 #include "MeshRenderer.h"
 #include "Quad.h"
+#include "CameraComp.h"
 
 Application *Application::m_application = nullptr;
 
@@ -81,10 +82,14 @@ void Application::GameInit()
 	m_entities.push_back(new Entity());
 	m_entities.at(0)->AddComponent( new MeshRenderer( 
 				new Mesh(Quad::quadVertices, Quad::quadIndices),
-				new ShaderProgram(ASSET_PATH + "simple_VERT.glsl", ASSET_PATH + "simple_FRAG.glsl"))
+				new ShaderProgram(ASSET_PATH + "simple_VERT.glsl", ASSET_PATH + "simple_FRAG.glsl"),
+				new Texture(ASSET_PATH + "Wood.jpg"))
 	);
 
-	m_entities.at(0)->GetTransform()->SetPosition(glm::vec3(0, 0, 10));
+	m_entities.at(0)->GetTransform()->SetPosition(glm::vec3(0, 0, 10));	m_entities.push_back(new Entity());
+	CameraComp* cc = new CameraComp();
+	m_entities.at(1)->AddComponent(cc);
+	cc->Start();
 }
 
 void Application::Loop()
@@ -133,11 +138,13 @@ void Application::Render()
 	glClearColor(0.f, 0.f, 0.f, 1.f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	m_mainCamera->Recalculate();
+
 	for (auto& a : m_entities)
 	{
 		a->OnRender();
 	}
-}void Application::Quit()
+}void Application::SetCamera(Camera* camera){	if (camera != nullptr)		m_mainCamera = camera;}void Application::Quit()
 {
 	//Close SDL
 	SDL_GL_DeleteContext(m_glContext);

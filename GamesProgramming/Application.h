@@ -9,6 +9,8 @@ enum AppState
 	INITILISING, RUNNING, QUITTING
 };
 
+class Camera; //forward declaration
+
 class Application
 {
 private:
@@ -22,6 +24,8 @@ private:
 	float m_worldDeltaTime = 0.f;
 
 	std::vector<Entity*> m_entities;
+	
+	Camera* m_mainCamera = nullptr;
 
 	//private functions
 	Application();
@@ -41,5 +45,8 @@ public:
 
 	inline int GetWindowHeight() { return m_windowHeight; }
 	inline int GetWindowWidth() { return m_windowWidth; }
+
+	inline Camera* GetCamera() { return m_mainCamera; }
+	void SetCamera(Camera* camera);
 };
 
