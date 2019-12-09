@@ -4,8 +4,11 @@
 #include "MeshRenderer.h"
 #include "Quad.h"
 #include "CameraComp.h"
+#include "Input.h"
+#include "Resources.h"
 
 Application *Application::m_application = nullptr;
+float counter = 0;
 
 Application::Application()
 {
@@ -78,18 +81,26 @@ void Application::OpenGlInit()
 
 void Application::GameInit()
 {
+	//loading all resources
+	Resources::GetInstance()->AddModel("cube.obj");
+	Resources::GetInstance()->AddTexture("Wood.jpg");
+	Resources::GetInstance()->AddShader(new ShaderProgram(ASSET_PATH + "simple_VERT.glsl", ASSET_PATH + "simple_FRAG.glsl"), "simple");
+
 	//Students should aim to have a better way of managing the scene for coursework
 	m_entities.push_back(new Entity());
 	m_entities.at(0)->AddComponent( new MeshRenderer( 
-				new Mesh(Quad::quadVertices, Quad::quadIndices),
-				new ShaderProgram(ASSET_PATH + "simple_VERT.glsl", ASSET_PATH + "simple_FRAG.glsl"),
-				new Texture(ASSET_PATH + "Wood.jpg"))
+		Resources::GetInstance()->GetModel("cube.obj"),
+		Resources::GetInstance()->GetShader("simple"),
+		Resources::GetInstance()->GetTexture("Wood.jpg"))
 	);
 
-	m_entities.at(0)->GetTransform()->SetPosition(glm::vec3(0, 0, 10));	m_entities.push_back(new Entity());
+	m_entities.at(0)->GetTransform()->SetPosition(glm::vec3(0, 0, -150));
+
+	m_entities.push_back(new Entity());
 	CameraComp* cc = new CameraComp();
 	m_entities.at(1)->AddComponent(cc);
-	cc->Start();
+	cc->Start();
+
 }
 
 void Application::Loop()
@@ -111,7 +122,11 @@ void Application::Loop()
 				m_appState = AppState::QUITTING;
 				break;
 			case SDL_KEYDOWN:
-				//TODO: quit app when user presses escape
+				INPUT->SetKey(event.key.keysym.sym, true);
+				break;
+				//record when the user releases a key
+			case SDL_MOUSEMOTION:
+				INPUT->MoveMouse(glm::ivec2(event.motion.xrel, event.motion.yrel));
 				break;
 			}
 		}
@@ -121,11 +136,15 @@ void Application::Loop()
 		prevTicks = currentTicks;
 
 		Update(deltaTime);
+		m_entities.at(0)->GetTransform()->SetRotation(glm::vec3(0, sinf(counter), 0));
+		counter += deltaTime;
 		Render();
 
 		SDL_GL_SwapWindow(m_window);
 	}
-}void Application::Update(float deltaTime)
+}
+
+void Application::Update(float deltaTime)
 {
 	for (auto& a : m_entities)
 	{
@@ -135,7 +154,7 @@ void Application::Loop()
 void Application::Render()
 {
 	/* Clear context */
-	glClearColor(0.f, 0.f, 0.f, 1.f);
+	glClearColor(0.f, 0.4f, 0.6f, 1.f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	m_mainCamera->Recalculate();
@@ -144,14 +163,24 @@ void Application::Render()
 	{
 		a->OnRender();
 	}
-}void Application::SetCamera(Camera* camera){	if (camera != nullptr)		m_mainCamera = camera;}void Application::Quit()
+}
+
+void Application::SetCamera(Camera* camera)
+{
+	if (camera != nullptr)
+		m_mainCamera = camera;
+}
+
+void Application::Quit()
 {
 	//Close SDL
 	SDL_GL_DeleteContext(m_glContext);
 	SDL_DestroyWindow(m_window);
 	SDL_QuitSubSystem(SDL_INIT_EVERYTHING);
 	SDL_Quit();
-}Application::~Application()
+}
+
+Application::~Application()
 {
 }
 
@@ -169,4 +198,6 @@ void Application::Run()
 	Init();
 	Loop();
 	Quit();
-}
+}
+
+

@@ -115,7 +115,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glew32.lib;opengl32.lib;SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew32.lib;opengl32.lib;SDL2.lib;SDL2main.lib;assimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy "$(SolutionDir)dependencies\dll" "$(OutDir)" /Y /I
@@ -135,7 +135,7 @@ xcopy "$(SolutionDir)assets" "$(OutDir)assets" /Y /I</Command>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glew32.lib;opengl32.lib;SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew32.lib;opengl32.lib;SDL2.lib;SDL2main.lib;assimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy "$(SolutionDir)dependencies\dll" "$(OutDir)" /Y /I
@@ -159,7 +159,7 @@ xcopy "$(SolutionDir)assets" "$(OutDir)assets" /Y /I</Command>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glew32.lib;opengl32.lib;SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew32.lib;opengl32.lib;SDL2.lib;SDL2main.lib;assimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy "$(SolutionDir)dependencies\dll" "$(OutDir)" /Y /I
@@ -183,7 +183,7 @@ xcopy "$(SolutionDir)assets" "$(OutDir)assets" /Y /I</Command>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glew32.lib;opengl32.lib;SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glew32.lib;opengl32.lib;SDL2.lib;SDL2main.lib;assimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy "$(SolutionDir)dependencies\dll" "$(OutDir)" /Y /I
@@ -200,6 +200,8 @@ xcopy "$(SolutionDir)assets" "$(OutDir)assets" /Y /I</Command>
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="MeshRenderer.cpp" />
+    <ClCompile Include="Model.cpp" />
+    <ClCompile Include="Resources.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="Texture.cpp" />
@@ -216,8 +218,10 @@ xcopy "$(SolutionDir)assets" "$(OutDir)assets" /Y /I</Command>
     <ClInclude Include="Log.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="MeshRenderer.h" />
+    <ClInclude Include="Model.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Quad.h" />
+    <ClInclude Include="Resources.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShaderProgram.h" />
     <ClInclude Include="Texture.h" />
@@ -225,7 +229,13 @@ xcopy "$(SolutionDir)assets" "$(OutDir)assets" /Y /I</Command>
     <ClInclude Include="Vertex.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\assets\simple_FRAG.glsl" />
+    <None Include="..\assets\simple_FRAG.glsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <FileType>Document</FileType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </None>
     <None Include="..\assets\simple_VERT.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

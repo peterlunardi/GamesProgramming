@@ -5,9 +5,9 @@
 #include "Application.h"
 #include "Camera.h"
 
-MeshRenderer::MeshRenderer(Mesh* mesh, ShaderProgram* program, Texture* texture)
+MeshRenderer::MeshRenderer(Model* model, ShaderProgram* program, Texture* texture)
 {
-	m_mesh = mesh;
+	m_model = model;
 	m_program = program;
 	m_texture = texture;
 }
@@ -41,6 +41,11 @@ void MeshRenderer::OnRender()
 	glUniform3f(loc, oColor.x, oColor.y, oColor.z);
 
 	m_texture->Bind();
-	m_mesh->Bind();
-	GL_ATTEMPT(glDrawElements(GL_TRIANGLES, m_mesh->GetIndiciesCount(), GL_UNSIGNED_INT, 0));
+
+	for (Mesh* mesh : m_model->GetMeshes())
+	{
+		mesh->Bind();
+		if (m_texture) m_texture->Bind();
+		GL_ATTEMPT(glDrawElements(GL_TRIANGLES, mesh->GetIndiciesCount(), GL_UNSIGNED_INT, 0));
+	}
 }

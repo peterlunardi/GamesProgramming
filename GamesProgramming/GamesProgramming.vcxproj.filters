@@ -54,6 +54,12 @@
     <ClCompile Include="Input.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Model.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Resources.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -107,12 +113,18 @@
     <ClInclude Include="InputState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\assets\simple_FRAG.glsl">
+    <None Include="..\assets\simple_VERT.glsl">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="..\assets\simple_VERT.glsl">
+    <None Include="..\assets\simple_FRAG.glsl">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

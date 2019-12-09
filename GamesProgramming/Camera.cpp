@@ -8,8 +8,7 @@ Camera::Camera(Transform* parent, CameraType type)
 	switch (m_type)
 	{
 	case ORTHOGRAPHIC:
-		SetProjOrtho(0, (float)WINDOW_W, 0, (float)WINDOW_H,
-			m_nearPlane, m_farPlane);
+		SetProjOrtho(0, (float)WINDOW_W, 0, (float)WINDOW_H, m_nearPlane, m_farPlane);
 		break;
 	case PERSPECTIVE:
 		SetProjPersp(m_fov, m_ratio, m_nearPlane, m_farPlane);

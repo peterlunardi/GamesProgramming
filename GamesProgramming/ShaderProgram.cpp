@@ -3,11 +3,12 @@
 #include "Log.h"
 ShaderProgram::ShaderProgram(const std::string& vShaderFile, const std::string& fShaderFile)
 {
+	m_program = glCreateProgram();
+
 	m_vShader = new Shader(vShaderFile, VERTEX_SHADER);
 	m_fShader = new Shader(fShaderFile, FRAGMENT_SHADER);
 	CHECK_GL_ERROR();
-
-	m_program = glCreateProgram();
+	
 	glAttachShader(m_program, m_vShader->Get());
 	glAttachShader(m_program, m_fShader->Get());
 
@@ -63,4 +64,5 @@ bool ShaderProgram::CheckForLinkErrors()
 		return true;
 	}
 	return false;
-}
+}
+

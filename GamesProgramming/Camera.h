@@ -54,5 +54,6 @@ public:
 	void SetProjPersp(float fov, float ratio, float nearPlane, float farPlane);
 	//sets the orthographic projection
 	void SetProjOrtho(float left, float right, float bottom, float top, float nearPlane, float farPlane);
-};
+};
+
 
