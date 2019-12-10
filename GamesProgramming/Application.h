@@ -22,6 +22,9 @@ private:
 	int m_windowHeight = 720;
 	AppState m_appState = AppState::INITILISING;
 	float m_worldDeltaTime = 0.f;
+	float lastX;
+	float lastY;
+	bool firstMouse = true;
 
 	std::vector<Entity*> m_entities;
 	
@@ -36,6 +39,7 @@ private:
 	void Quit();
 	void Update(float deltaTime);
 	void Render();
+	void ProcessInput(float deltaTime);
 
 public:
 	//public functions

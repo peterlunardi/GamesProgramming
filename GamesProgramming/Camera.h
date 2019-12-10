@@ -5,6 +5,13 @@
 #include "Application.h"
 
 enum CameraType { PERSPECTIVE, ORTHOGRAPHIC };
+enum CameraMovement { FORWARD, BACKWARD, LEFT, RIGHT, UP, DOWN };
+
+//Default camera values
+const float YAW = -90.0f;
+const float PITCH = 0.0f;
+const float SPEED = 1.0f;
+const float SENSITIVITY = 0.1f;
 
 class Camera
 {
@@ -31,8 +38,26 @@ private:
 
 	Camera();
 
+	glm::vec3 pos;
+	glm::vec3 forward;
+	glm::vec3 worldUp;
+	void UpdateCameraVectors();
+
 public:
+	//camera attributes
+	glm::vec3 Right;
+	glm::vec3 Up;
+	//euler angles
+	float Yaw;
+	float Pitch;
+	//camera options
+	float MovementSpeed;
+	float MouseSensitivity;
+
 	Camera(Transform* parent, CameraType type = CameraType::PERSPECTIVE);
+
+	void ProcessKeyboard(CameraMovement direction, float deltaTime);
+	void ProcessMouseMovement(float xoffset, float yoffset);
 
 	void Recalculate();
 

@@ -48,7 +48,8 @@ Mesh* Model::processMesh(aiMesh* mesh, const aiScene* scene)
 			vertex.normal.x = mesh->mNormals[i].x;
 			vertex.normal.y = mesh->mNormals[i].y;
 			vertex.normal.z = mesh->mNormals[i].z;
-		}
+		}
+
 		if (mesh->mColors[0])
 		{
 			vertex.color.r = mesh->mColors[0][i].r;
@@ -59,7 +60,8 @@ Mesh* Model::processMesh(aiMesh* mesh, const aiScene* scene)
 		else
 		{
 			vertex.color = glm::vec4(1.f);
-		}
+		}
+
 		if (mesh->mTextureCoords[0])
 		{
 			vertex.texture.x = mesh->mTextureCoords[0][i].x;
