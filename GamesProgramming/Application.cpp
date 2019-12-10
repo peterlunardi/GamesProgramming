@@ -89,9 +89,14 @@ void Application::GameInit()
 {
 	//loading all resources
 	Resources::GetInstance()->AddModel("cube.obj");
+	Resources::GetInstance()->AddModel("penguin.obj");
+	Resources::GetInstance()->AddTexture("penguinTex.png");
+	Resources::GetInstance()->AddModel("turkey.obj");
+	Resources::GetInstance()->AddTexture("turkey.jpg");
 	Resources::GetInstance()->AddTexture("Wood.jpg");
 	Resources::GetInstance()->AddShader(new ShaderProgram(ASSET_PATH + "simple_VERT.glsl", ASSET_PATH + "simple_FRAG.glsl"), "simple");
 
+	//The ground!
 	Entity* a = new Entity();
 	m_entities.push_back(a);
 	a->AddComponent(
@@ -123,6 +128,30 @@ void Application::GameInit()
 		a->GetTransform()->SetScale(glm::vec3(1.f, 1.f, 1.f));
 	}
 
+	//penguin!!
+	a = new Entity();
+	m_entities.push_back(a);
+	a->AddComponent(
+		new MeshRenderer(
+			Resources::GetInstance()->GetModel("penguin.obj"),
+			Resources::GetInstance()->GetShader("simple"),
+			Resources::GetInstance()->GetTexture("penguinTex.png"))
+	);
+	m = a->GetComponent<MeshRenderer>();
+	a->GetTransform()->SetPosition(glm::vec3(10, 5, -10));
+
+	//turkey!!
+	a = new Entity();
+	m_entities.push_back(a);
+	a->AddComponent(
+		new MeshRenderer(
+			Resources::GetInstance()->GetModel("turkey.obj"),
+			Resources::GetInstance()->GetShader("simple"),
+			Resources::GetInstance()->GetTexture("turkey.jpg"))
+	);
+	m = a->GetComponent<MeshRenderer>();
+	a->GetTransform()->SetPosition(glm::vec3(15, 5, -10));
+
 	a = new Entity();
 	m_entities.push_back(a);
 	CameraComp* cc = new CameraComp();
@@ -144,6 +173,7 @@ void Application::Loop()
 
 		ProcessInput(deltaTime);
 		Physics::GetInstance()->Update(deltaTime);
+		std::cout << m_entities[10]->GetTransform()->GetPosition().y << std::endl;
 		Update(deltaTime);
 		Render();
 
@@ -232,7 +262,7 @@ void Application::Update(float deltaTime)
 void Application::Render()
 {
 	/* Clear context */
-	glClearColor(0.f, 0.4f, 0.6f, 1.f);
+	glClearColor(0.f, 0.25f, 0.6f, 1.f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	m_mainCamera->Recalculate();

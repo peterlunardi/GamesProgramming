@@ -33,6 +33,7 @@ void Physics::Update(float deltaTime)
 {
 	PreUpdate();
 	m_world->stepSimulation(deltaTime, 2);
+	m_world->performDiscreteCollisionDetection();
 	for (auto r : m_rbodies)
 	{
 		r->UpdateParent();

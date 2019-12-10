@@ -26,4 +26,5 @@ void Entity::OnRender()
 	{
 		c->OnRender();
 	}
-}
+}
+

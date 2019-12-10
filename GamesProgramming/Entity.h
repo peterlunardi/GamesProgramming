@@ -38,7 +38,8 @@ void Entity::AddComponent()
 		LOG_DEBUG("Can't add component, does not inherit from Component");
 	}
 }
-template<class T>
+
+template<class T>
 
 T* Entity::GetComponent()
 {
@@ -52,4 +53,5 @@ T* Entity::GetComponent()
 		}
 	}
 	return nullptr;
-}
+}
+
