@@ -152,9 +152,4 @@
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Object Include="..\assets\turkey.obj">
-      <Filter>Resource Files</Filter>
-    </Object>
-  </ItemGroup>
 </Project>

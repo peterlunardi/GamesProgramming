@@ -13,7 +13,7 @@ private:
 public:
 	virtual void OnUpdate(float deltaTime) override;
 	virtual void OnRender() override;
-	void Init(CollisionShape* shape, float mass = 1.f, const glm::vec3 localInertia = glm::vec3(1));
+	void Init(CollisionShape* shape, float mass = 1.f, const glm::vec3 localInertia = glm::vec3(1.f));
 	virtual void UpdateParent();
 	virtual void UpdateRigidBody();
 	btRigidBody* Get() { return m_rigidBody; }

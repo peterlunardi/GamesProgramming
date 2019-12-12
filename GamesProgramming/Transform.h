@@ -8,7 +8,7 @@ private:
 	glm::vec3 m_right = glm::vec3(0.f, 0.f, 0.f);
 	glm::vec3 m_up = glm::vec3(0.f, 0.f, 0.f);
 	glm::vec3 m_scale = glm::vec3(1.f, 1.f, 1.f);
-	glm::quat m_rotation = glm::quat();
+	glm::quat m_rotation = glm::quat(1.f, 0.f, 0.f, 0.f);
 	glm::mat4 m_transformMatrix = glm::mat4();
 	bool m_isDirty = true;
 	glm::mat4 UpdateTransform();

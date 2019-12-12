@@ -151,6 +151,9 @@ void Application::GameInit()
 	);
 	m = a->GetComponent<MeshRenderer>();
 	a->GetTransform()->SetPosition(glm::vec3(15, 5, -10));
+	a->AddComponent<RigidBody>();
+	a->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(1.f, 1.f, 1.f)));
+	a->GetTransform()->SetScale(glm::vec3(1.f, 1.f, 1.f));
 
 	a = new Entity();
 	m_entities.push_back(a);
@@ -173,7 +176,6 @@ void Application::Loop()
 
 		ProcessInput(deltaTime);
 		Physics::GetInstance()->Update(deltaTime);
-		std::cout << m_entities[10]->GetTransform()->GetPosition().y << std::endl;
 		Update(deltaTime);
 		Render();
 
