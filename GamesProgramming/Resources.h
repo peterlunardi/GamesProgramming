@@ -28,8 +28,7 @@ public:
 	void AddModel(const std::string& directory);
 	void AddModel(const std::string& name, Model* m) 
 	{
-		m_models[name] =
-			m;
+		m_models[name] = m;
 	}
 
 	void AddTexture(const std::string& directory);

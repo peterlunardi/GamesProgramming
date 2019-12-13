@@ -72,6 +72,9 @@
     <ClCompile Include="Physics.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SphereShape.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -143,12 +146,21 @@
     <ClInclude Include="Physics.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SphereShape.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\assets\simple_VERT.glsl">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="..\assets\simple_FRAG.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\assets\lighting_FRAG.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\assets\lighting_VERT.glsl">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

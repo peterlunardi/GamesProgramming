@@ -7,7 +7,8 @@
 
 GLuint Texture::Load(const std::string& directory)
 {
-	stbi_set_flip_vertically_on_load(true);
+	//this was set to true, false makes it work though
+	stbi_set_flip_vertically_on_load(false);
 
 	GLuint texture = 0;
 	int width, height, nrChannels;

@@ -1,7 +1,8 @@
 #pragma once
-//forward declaring to avoid circular includes
 
+//forward declaring to avoid circular includes
 class Entity;
+
 class Component
 {
 protected:

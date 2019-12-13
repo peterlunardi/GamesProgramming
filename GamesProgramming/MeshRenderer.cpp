@@ -19,26 +19,22 @@ void MeshRenderer::OnUpdate(float deltaTime)
 
 void MeshRenderer::OnRender()
 {
+	//bind the shader program before setting uniforms and rendering
 	m_program->Use();
-	//set uniforms here!
+
+	//set uniforms here! (common uniforms used for all meshes i.e mvp)
+
+	//Model view projection matrix uniform
 	glm::mat4 model = m_entity->GetTransform()->GetTransformationMatrix();
-	//glm::mat4 view = glm::lookAt(
-	//	glm::vec3(0.f, 0.f, 0.f),
-	//	glm::vec3(0.f, 0.f, 1.f) - glm::vec3(0.f, 0.f, 0.f),
-	//	glm::vec3(0.f, 1.f, 0.f)
-	//);
-	//
-	//glm::mat4 proj = glm::perspective(45.5f, (float)WINDOW_W / (float)WINDOW_H, 0.1f, 1000.f);
-	//glm::mat4 mvp = proj * view * model;
+	glm::mat4 vp = Application::GetInstance()->GetCamera()->Get();
+	m_program->setMat4("model", model);
+	m_program->setMat4("VP", vp);
 
-	glm::mat4 mvp = Application::GetInstance()->GetCamera()->Get() * model;
-
-	GLuint loc = glGetUniformLocation(m_program->Get(), "MVP");
-	glUniformMatrix4fv(loc, 1, false, (const GLfloat*)glm::value_ptr(mvp));
-
-	glm::vec3 oColor = glm::vec3(1.f, 0.f, 0.f);
-	loc = glGetUniformLocation(m_program->Get(), "objectColor");
-	glUniform3f(loc, oColor.x, oColor.y, oColor.z);
+	//lighting
+	//glm::vec3 lightPos = glm::vec3(1.0f, 20.0f, -30.0f);
+	//glm::vec3 lightColour = glm::vec3(1.f, 1.f, 1.f);
+	//m_program->setVec3("lightPos", lightPos);
+	//m_program->setVec3("lightColour", lightColour);
 
 	m_texture->Bind();
 

@@ -8,6 +8,7 @@
 #include "Resources.h"
 #include "Physics.h"
 #include "BoxShape.h"
+#include "SphereShape.h"
 #include "RigidBody.h"
 
 Application *Application::m_application = nullptr;
@@ -95,6 +96,7 @@ void Application::GameInit()
 	Resources::GetInstance()->AddTexture("turkey.jpg");
 	Resources::GetInstance()->AddTexture("Wood.jpg");
 	Resources::GetInstance()->AddShader(new ShaderProgram(ASSET_PATH + "simple_VERT.glsl", ASSET_PATH + "simple_FRAG.glsl"), "simple");
+	Resources::GetInstance()->AddShader(new ShaderProgram(ASSET_PATH + "lighting_VERT.glsl", ASSET_PATH + "lighting_FRAG.glsl"), "lighting");
 
 	//The ground!
 	Entity* a = new Entity();
@@ -102,7 +104,7 @@ void Application::GameInit()
 	a->AddComponent(
 		new MeshRenderer(
 			Resources::GetInstance()->GetModel("cube.obj"),
-			Resources::GetInstance()->GetShader("simple"),
+			Resources::GetInstance()->GetShader("lighting"),
 			Resources::GetInstance()->GetTexture("Wood.jpg"))
 	);
 	MeshRenderer* m = a->GetComponent<MeshRenderer>();
@@ -112,6 +114,7 @@ void Application::GameInit()
 	a->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
 	a->GetTransform()->SetScale(glm::vec3(100.f, 1.f, 100.f));
 
+	//SPAWN 100 CUBES!!!------------------------------
 	for (int i = 0; i < 100; i++)
 	{
 		Entity* a = new Entity();
@@ -119,7 +122,7 @@ void Application::GameInit()
 		a->AddComponent(
 			new MeshRenderer(
 				Resources::GetInstance()->GetModel("cube.obj"),
-				Resources::GetInstance()->GetShader("simple"),
+				Resources::GetInstance()->GetShader("lighting"),
 				Resources::GetInstance()->GetTexture("Wood.jpg"))
 		);
 		a->GetTransform()->SetPosition(glm::vec3(0, 5.f * i, -20.f));
@@ -128,31 +131,31 @@ void Application::GameInit()
 		a->GetTransform()->SetScale(glm::vec3(1.f, 1.f, 1.f));
 	}
 
-	//penguin!!
+	//penguin!!-----------------------------------------
 	a = new Entity();
 	m_entities.push_back(a);
 	a->AddComponent(
 		new MeshRenderer(
 			Resources::GetInstance()->GetModel("penguin.obj"),
-			Resources::GetInstance()->GetShader("simple"),
+			Resources::GetInstance()->GetShader("lighting"),
 			Resources::GetInstance()->GetTexture("penguinTex.png"))
 	);
 	m = a->GetComponent<MeshRenderer>();
 	a->GetTransform()->SetPosition(glm::vec3(10, 5, -10));
 
-	//turkey!!
+	//turkey!!------------------------------------------------
 	a = new Entity();
 	m_entities.push_back(a);
 	a->AddComponent(
 		new MeshRenderer(
 			Resources::GetInstance()->GetModel("turkey.obj"),
-			Resources::GetInstance()->GetShader("simple"),
+			Resources::GetInstance()->GetShader("lighting"),
 			Resources::GetInstance()->GetTexture("turkey.jpg"))
 	);
 	m = a->GetComponent<MeshRenderer>();
-	a->GetTransform()->SetPosition(glm::vec3(15, 5, -10));
+	a->GetTransform()->SetPosition(glm::vec3(5, 5, -10));
 	a->AddComponent<RigidBody>();
-	a->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(1.f, 1.f, 1.f)));
+	a->GetComponent<RigidBody>()->Init(new SphereShape(1.f));
 	a->GetTransform()->SetScale(glm::vec3(1.f, 1.f, 1.f));
 
 	a = new Entity();
@@ -173,6 +176,10 @@ void Application::Loop()
 		float deltaTime = (float)std::chrono::duration_cast<std::chrono::microseconds>(currentTicks - prevTicks).count() / 100000;
 		m_worldDeltaTime = deltaTime;
 		prevTicks = currentTicks;
+
+		Resources::GetInstance()->GetShader("lighting")->Use();
+		Resources::GetInstance()->GetShader("lighting")->setVec3("lightColour", glm::vec3(1.f, 1.f, 1.f));
+		Resources::GetInstance()->GetShader("lighting")->setVec3("lightPos", glm::vec3(1.0f, 20.0f, -30.0f));
 
 		ProcessInput(deltaTime);
 		Physics::GetInstance()->Update(deltaTime);
