@@ -199,6 +199,7 @@ xcopy "$(SolutionDir)assets" "$(OutDir)assets" /Y /I</Command>
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="GamesProgramming.cpp" />
     <ClCompile Include="Input.cpp" />
+    <ClCompile Include="Light.cpp" />
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="MeshRenderer.cpp" />
@@ -222,6 +223,7 @@ xcopy "$(SolutionDir)assets" "$(OutDir)assets" /Y /I</Command>
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="InputState.h" />
+    <ClInclude Include="Light.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="MeshRenderer.h" />
@@ -241,6 +243,10 @@ xcopy "$(SolutionDir)assets" "$(OutDir)assets" /Y /I</Command>
   <ItemGroup>
     <None Include="..\assets\lighting_FRAG.glsl" />
     <None Include="..\assets\lighting_VERT.glsl" />
+    <None Include="..\assets\lightSource_FRAG.glsl" />
+    <None Include="..\assets\lightSource_VERT.glsl" />
+    <None Include="..\assets\multipleLight_FRAG.glsl" />
+    <None Include="..\assets\multipleLight_VERT.glsl" />
     <None Include="..\assets\simple_FRAG.glsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
       <FileType>Document</FileType>

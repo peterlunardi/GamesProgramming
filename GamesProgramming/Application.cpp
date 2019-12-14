@@ -10,9 +10,12 @@
 #include "BoxShape.h"
 #include "SphereShape.h"
 #include "RigidBody.h"
+#include "Light.h"
 
-Application *Application::m_application = nullptr;
+Application* Application::m_application = nullptr;
 float counter = 0;
+float counter2 = 0;
+float counter3 = 0;
 
 Application::Application()
 {
@@ -88,6 +91,19 @@ void Application::OpenGlInit()
 
 void Application::GameInit()
 {
+
+	//Light* light = new Light(glm::vec3(1.0f, 20.0f, -30.0f), glm::vec3(0.5f, 0.5f, 0.5f));
+	//m_lights.push_back(light);
+	//
+	//light = new Light(glm::vec3(0.0f, 500.0f, -20.0f), glm::vec3(0.0f, 0.1f, 1.f));
+	//m_lights.push_back(light);
+	//
+	//light = new Light(glm::vec3(0.0f, 10.0f, 100.0f), glm::vec3(1.f, 0.1f, 0.1f));
+	//m_lights.push_back(light);
+	//
+	//light = new Light(glm::vec3(-10.0f, 30.0f, -100.0f), glm::vec3(1.0f, 1.0f, 0.1f));
+	//m_lights.push_back(light);
+
 	//loading all resources
 	Resources::GetInstance()->AddModel("cube.obj");
 	Resources::GetInstance()->AddModel("penguin.obj");
@@ -97,6 +113,8 @@ void Application::GameInit()
 	Resources::GetInstance()->AddTexture("Wood.jpg");
 	Resources::GetInstance()->AddShader(new ShaderProgram(ASSET_PATH + "simple_VERT.glsl", ASSET_PATH + "simple_FRAG.glsl"), "simple");
 	Resources::GetInstance()->AddShader(new ShaderProgram(ASSET_PATH + "lighting_VERT.glsl", ASSET_PATH + "lighting_FRAG.glsl"), "lighting");
+	Resources::GetInstance()->AddShader(new ShaderProgram(ASSET_PATH + "multipleLight_VERT.glsl", ASSET_PATH + "multipleLight_FRAG.glsl"), "multiLight");
+	Resources::GetInstance()->AddShader(new ShaderProgram(ASSET_PATH + "lightSource_VERT.glsl", ASSET_PATH + "lightSource_FRAG.glsl"), "source");
 
 	//The ground!
 	Entity* a = new Entity();
@@ -115,14 +133,14 @@ void Application::GameInit()
 	a->GetTransform()->SetScale(glm::vec3(100.f, 1.f, 100.f));
 
 	//SPAWN 100 CUBES!!!------------------------------
-	for (int i = 0; i < 100; i++)
+	for (int i = 0; i < 50; i++)
 	{
 		Entity* a = new Entity();
 		m_entities.push_back(a);
 		a->AddComponent(
 			new MeshRenderer(
 				Resources::GetInstance()->GetModel("cube.obj"),
-				Resources::GetInstance()->GetShader("lighting"),
+				Resources::GetInstance()->GetShader("multiLight"),
 				Resources::GetInstance()->GetTexture("Wood.jpg"))
 		);
 		a->GetTransform()->SetPosition(glm::vec3(0, 5.f * i, -20.f));
@@ -142,6 +160,9 @@ void Application::GameInit()
 	);
 	m = a->GetComponent<MeshRenderer>();
 	a->GetTransform()->SetPosition(glm::vec3(10, 5, -10));
+	a->AddComponent<RigidBody>();
+	a->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(0.5f, 0.5f, 0.5f)));
+	a->GetTransform()->SetScale(glm::vec3(1.f, 1.f, 1.f));
 
 	//turkey!!------------------------------------------------
 	a = new Entity();
@@ -149,7 +170,7 @@ void Application::GameInit()
 	a->AddComponent(
 		new MeshRenderer(
 			Resources::GetInstance()->GetModel("turkey.obj"),
-			Resources::GetInstance()->GetShader("lighting"),
+			Resources::GetInstance()->GetShader("multiLight"),
 			Resources::GetInstance()->GetTexture("turkey.jpg"))
 	);
 	m = a->GetComponent<MeshRenderer>();
@@ -158,6 +179,59 @@ void Application::GameInit()
 	a->GetComponent<RigidBody>()->Init(new SphereShape(1.f));
 	a->GetTransform()->SetScale(glm::vec3(1.f, 1.f, 1.f));
 
+	//LIGHT ENTITIES---------------------
+	a = new Entity();
+	m_entities.push_back(a);
+	m_lights.push_back(a);
+	a->AddComponent(
+		new MeshRenderer(
+			Resources::GetInstance()->GetModel("cube.obj"),
+			Resources::GetInstance()->GetShader("source"),
+			Resources::GetInstance()->GetTexture("penguinTex.png"))
+	);
+	a->GetTransform()->SetPosition(glm::vec3(20.0f, 20.0f, 0.0f));
+	a->GetTransform()->SetScale(glm::vec3(0.5f, 0.5f, 0.5f));
+	a->AddComponent(new Light(a->GetTransform()->GetPosition(), glm::vec3(0.5f, 0.5f, 0.5f)));
+
+	a = new Entity();
+	m_entities.push_back(a);
+	m_lights.push_back(a);
+	a->AddComponent(
+		new MeshRenderer(
+			Resources::GetInstance()->GetModel("cube.obj"),
+			Resources::GetInstance()->GetShader("source"),
+			Resources::GetInstance()->GetTexture("penguinTex.png"))
+	);
+	a->GetTransform()->SetPosition(glm::vec3(-10.0f, 1.0f, -50.0f));
+	a->GetTransform()->SetScale(glm::vec3(0.5f, 0.5f, 0.5f));
+	a->AddComponent(new Light(a->GetTransform()->GetPosition(), glm::vec3(1.0f, 0.0f, 0.1f)));
+
+	a = new Entity();
+	m_entities.push_back(a);
+	m_lights.push_back(a);
+	a->AddComponent(
+		new MeshRenderer(
+			Resources::GetInstance()->GetModel("cube.obj"),
+			Resources::GetInstance()->GetShader("source"),
+			Resources::GetInstance()->GetTexture("penguinTex.png"))
+	);
+	a->GetTransform()->SetPosition(glm::vec3(-10.0f, 1.0f, 20.0f));
+	a->GetTransform()->SetScale(glm::vec3(0.5f, 0.5f, 0.5f));
+	a->AddComponent(new Light(a->GetTransform()->GetPosition(), glm::vec3(0.0f, 0.0f, 1.f)));
+
+	a = new Entity();
+	m_entities.push_back(a);
+	m_lights.push_back(a);
+	a->AddComponent(
+		new MeshRenderer(
+			Resources::GetInstance()->GetModel("cube.obj"),
+			Resources::GetInstance()->GetShader("source"),
+			Resources::GetInstance()->GetTexture("penguinTex.png"))
+	);
+	a->GetTransform()->SetPosition(glm::vec3(-20.0f, 1.0f, 0.0f));
+	a->GetTransform()->SetScale(glm::vec3(0.5f, 0.5f, 0.5f));
+	a->AddComponent(new Light(a->GetTransform()->GetPosition(), glm::vec3(0.0f, 1.0f, 0.f)));
+
 	a = new Entity();
 	m_entities.push_back(a);
 	CameraComp* cc = new CameraComp();
@@ -165,11 +239,32 @@ void Application::GameInit()
 	cc->Start();
 }
 
+void Application::LoadLights(std::vector<Entity*> lights)
+{
+	Resources::GetInstance()->GetShader("multiLight")->Use();
+
+	for (int i = 0; i < MAX_LIGHTS; i++)
+	{
+		std::string colourStr = std::string("lightColour[") + std::to_string(i) + std::string("]");
+		std::string posStr = std::string("lightPos[") + std::to_string(i) + std::string("]");
+
+		if (i < m_lights.size())
+		{
+			Resources::GetInstance()->GetShader("multiLight")->setVec3(colourStr, lights[i]->GetComponent<Light>()->GetColour());
+			Resources::GetInstance()->GetShader("multiLight")->setVec3(posStr, lights[i]->GetTransform()->GetPosition());
+		}
+		else {
+			Resources::GetInstance()->GetShader("multiLight")->setVec3(colourStr, glm::vec3(0, 0, 0));
+			Resources::GetInstance()->GetShader("multiLight")->setVec3(posStr, glm::vec3(0, 0, 0));
+		}
+	}
+}
+
 void Application::Loop()
 {
 	m_appState = AppState::RUNNING;
 	auto prevTicks = std::chrono::high_resolution_clock::now();
-	
+
 	while (m_appState != AppState::QUITTING)
 	{
 		auto currentTicks = std::chrono::high_resolution_clock::now();
@@ -178,10 +273,20 @@ void Application::Loop()
 		prevTicks = currentTicks;
 
 		Resources::GetInstance()->GetShader("lighting")->Use();
-		Resources::GetInstance()->GetShader("lighting")->setVec3("lightColour", glm::vec3(1.f, 1.f, 1.f));
-		Resources::GetInstance()->GetShader("lighting")->setVec3("lightPos", glm::vec3(1.0f, 20.0f, -30.0f));
+		Resources::GetInstance()->GetShader("lighting")->setVec3("lightColour", m_lights[0]->GetComponent<Light>()->GetColour());
+		Resources::GetInstance()->GetShader("lighting")->setVec3("lightPos", m_lights[0]->GetTransform()->GetPosition());
+		Resources::GetInstance()->GetShader("lighting")->setVec3("viewPos", m_mainCamera->GetParentTransform()->GetPosition());
 
+		//rave
+		//m_lights[1]->SetColour(glm::vec3(sinf(counter), 0.5f, 0.3f));
+		//m_lights[2]->SetColour(glm::vec3(0.2f, sinf(counter2), 0.3f));
+		//m_lights[3]->GetComponent<Light>()->SetColour(glm::vec3(0.2f, 0.6f, sinf(counter3)));
+
+		LoadLights(m_lights);
 		ProcessInput(deltaTime);
+		counter += deltaTime;
+		counter2 += deltaTime * 2;
+		counter3 += deltaTime * 0.5f;
 		Physics::GetInstance()->Update(deltaTime);
 		Update(deltaTime);
 		Render();

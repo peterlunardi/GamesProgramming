@@ -21,7 +21,7 @@ void RigidBody::Init(CollisionShape* shape, float mass, const glm::vec3 localIne
 	m_rigidBody = new btRigidBody(btScalar(mass), m_mState, m_shape->Get(), li);
 	Physics::GetInstance()->AddRigidbody(this);
 	m_rigidBody->setSleepingThresholds(0, 0);
-	m_rigidBody->setFriction(1);
+	m_rigidBody->setFriction(2);
 }
 
 void RigidBody::UpdateParent()

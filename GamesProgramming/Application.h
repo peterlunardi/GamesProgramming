@@ -1,5 +1,6 @@
 #pragma once
 #include "Entity.h"
+#include "Light.h"
 
 #define WINDOW_W Application::GetInstance()->GetWindowWidth()
 #define WINDOW_H Application::GetInstance()->GetWindowHeight()
@@ -30,6 +31,9 @@ private:
 	
 	Camera* m_mainCamera = nullptr;
 
+	int MAX_LIGHTS = 4;
+	std::vector<Entity*> m_lights;
+
 	//private functions
 	Application();
 	void Init();
@@ -52,5 +56,6 @@ public:
 
 	inline Camera* GetCamera() { return m_mainCamera; }
 	void SetCamera(Camera* camera);
+	void LoadLights(std::vector<Entity*> lights);
 };
 

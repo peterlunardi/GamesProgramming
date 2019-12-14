@@ -30,12 +30,6 @@ void MeshRenderer::OnRender()
 	m_program->setMat4("model", model);
 	m_program->setMat4("VP", vp);
 
-	//lighting
-	//glm::vec3 lightPos = glm::vec3(1.0f, 20.0f, -30.0f);
-	//glm::vec3 lightColour = glm::vec3(1.f, 1.f, 1.f);
-	//m_program->setVec3("lightPos", lightPos);
-	//m_program->setVec3("lightColour", lightColour);
-
 	m_texture->Bind();
 
 	for (Mesh* mesh : m_model->GetMeshes())
