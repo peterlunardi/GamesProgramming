@@ -16,6 +16,7 @@ public:
 	~ShaderProgram();
 	void BindAttribLoc(GLuint loc, const char* name);
 	void Link();
+	void LinkGeo();
 	void Use();
 	GLuint Get() { return m_program; }
 

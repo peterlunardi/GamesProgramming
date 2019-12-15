@@ -8,14 +8,14 @@
 class MeshRenderer : public Component
 {
 private:
-	Model* m_model;
-	ShaderProgram* m_program;
-	Texture* m_texture;
+	std::shared_ptr<Model> m_model;
+	std::shared_ptr<ShaderProgram> m_program;
+	std::shared_ptr<Texture> m_texture;
 
 public:
 
 	// Inherited via Component
-	MeshRenderer(Model* model, ShaderProgram* program, Texture* texture);
+	MeshRenderer(std::shared_ptr <Model> model, std::shared_ptr<ShaderProgram> program, std::shared_ptr<Texture> texture);
 	virtual void OnUpdate(float deltaTime) override;
 	virtual void OnRender() override;
 };

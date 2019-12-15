@@ -185,11 +185,11 @@ void Application::GameInit()
 	Resources::GetInstance()->AddTexture("Wood.jpg");
 	Resources::GetInstance()->AddTexture("floorTile.jpg");
 	Resources::GetInstance()->AddTexture("cone.jpg");
-	Resources::GetInstance()->AddShader(new ShaderProgram(ASSET_PATH + "simple_VERT.glsl", ASSET_PATH + "simple_FRAG.glsl"), "simple");
-	Resources::GetInstance()->AddShader(new ShaderProgram(ASSET_PATH + "lighting_VERT.glsl", ASSET_PATH + "lighting_FRAG.glsl"), "lighting");
-	Resources::GetInstance()->AddShader(new ShaderProgram(ASSET_PATH + "multipleLight_VERT.glsl", ASSET_PATH + "multipleLight_FRAG.glsl"), "multiLight");
-	Resources::GetInstance()->AddShader(new ShaderProgram(ASSET_PATH + "lightSource_VERT.glsl", ASSET_PATH + "lightSource_FRAG.glsl"), "source");
-	Resources::GetInstance()->AddShader(new ShaderProgram(ASSET_PATH + "water_VERT.glsl", ASSET_PATH + "water_FRAG.glsl", ASSET_PATH + "water_GEOM.glsl"), "water");
+	Resources::GetInstance()->AddShader(std::make_shared<ShaderProgram>(ASSET_PATH + "simple_VERT.glsl", ASSET_PATH + "simple_FRAG.glsl"), "simple");
+	Resources::GetInstance()->AddShader(std::make_shared<ShaderProgram>(ASSET_PATH + "lighting_VERT.glsl", ASSET_PATH + "lighting_FRAG.glsl"), "lighting");
+	Resources::GetInstance()->AddShader(std::make_shared<ShaderProgram>(ASSET_PATH + "multipleLight_VERT.glsl", ASSET_PATH + "multipleLight_FRAG.glsl"), "multiLight");
+	Resources::GetInstance()->AddShader(std::make_shared<ShaderProgram>(ASSET_PATH + "lightSource_VERT.glsl", ASSET_PATH + "lightSource_FRAG.glsl"), "source");
+	Resources::GetInstance()->AddShader(std::make_shared<ShaderProgram>(ASSET_PATH + "water_VERT.glsl", ASSET_PATH + "water_FRAG.glsl", ASSET_PATH + "water_GEOM.glsl"), "water");
 
 	MapInit();
 

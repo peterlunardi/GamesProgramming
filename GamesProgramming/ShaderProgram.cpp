@@ -28,7 +28,7 @@ ShaderProgram::ShaderProgram(const std::string& vShaderFile, const std::string& 
 	glAttachShader(m_program, m_fShader->Get());
 	glAttachShader(m_program, m_gShader->Get());
 
-	Link();
+	LinkGeo();
 }
 
 ShaderProgram::~ShaderProgram()
@@ -43,6 +43,18 @@ void ShaderProgram::BindAttribLoc(GLuint loc, const char* name)
 }
 
 void ShaderProgram::Link()
+{
+	//link shaders and attribs
+	glLinkProgram(m_program);
+	CheckForLinkErrors();
+	CHECK_GL_ERROR();
+
+	//if they were linked we no longer need them
+	delete m_vShader;
+	delete m_fShader;
+}
+
+void ShaderProgram::LinkGeo()
 {
 	//link shaders and attribs
 	glLinkProgram(m_program);
