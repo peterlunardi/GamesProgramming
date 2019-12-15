@@ -15,6 +15,22 @@ ShaderProgram::ShaderProgram(const std::string& vShaderFile, const std::string& 
 	Link();
 }
 
+ShaderProgram::ShaderProgram(const std::string& vShaderFile, const std::string& fShaderFile, const std::string& gShaderFile)
+{
+	m_program = glCreateProgram();
+
+	m_vShader = new Shader(vShaderFile, VERTEX_SHADER);
+	m_fShader = new Shader(fShaderFile, FRAGMENT_SHADER);
+	m_gShader = new Shader(gShaderFile, GEOMETRY_SHADER);
+	CHECK_GL_ERROR();
+
+	glAttachShader(m_program, m_vShader->Get());
+	glAttachShader(m_program, m_fShader->Get());
+	glAttachShader(m_program, m_gShader->Get());
+
+	Link();
+}
+
 ShaderProgram::~ShaderProgram()
 {
 	glDeleteProgram(m_program);
@@ -36,6 +52,7 @@ void ShaderProgram::Link()
 	//if they were linked we no longer need them
 	delete m_vShader;
 	delete m_fShader;
+	delete m_gShader;
 }
 
 void ShaderProgram::Use()

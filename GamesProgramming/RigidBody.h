@@ -16,6 +16,9 @@ public:
 	void Init(CollisionShape* shape, float mass = 1.f, const glm::vec3 localInertia = glm::vec3(1.f));
 	virtual void UpdateParent();
 	virtual void UpdateRigidBody();
+	virtual void ApplyForce(float f);
+	virtual void ApplyForce(btVector3 forceVector);
+	virtual void ApplyTorque(float f);
 	btRigidBody* Get() { return m_rigidBody; }
 };
 

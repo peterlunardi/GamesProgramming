@@ -26,6 +26,7 @@ private:
 	float lastX;
 	float lastY;
 	bool firstMouse = true;
+	bool boom = false;
 
 	std::vector<Entity*> m_entities;
 	
@@ -33,12 +34,16 @@ private:
 
 	int MAX_LIGHTS = 4;
 	std::vector<Entity*> m_lights;
+	std::vector<Entity*> m_boxes;
 
 	//private functions
 	Application();
 	void Init();
 	void OpenGlInit();
 	void GameInit();
+	void MapInit();
+	void WallInit(float xPos, float zPos, float xScale, float zScale);
+	void CreateLight(glm::vec3 position, glm::vec3 colour);
 	void Loop();
 	void Quit();
 	void Update(float deltaTime);

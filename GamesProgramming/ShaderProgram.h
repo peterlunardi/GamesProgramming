@@ -7,11 +7,12 @@ class ShaderProgram
 private:
 	//TODO:Track currently active shader
 	GLuint m_program;
-	Shader* m_vShader, * m_fShader;
+	Shader* m_vShader, * m_fShader, * m_gShader;
 	bool CheckForLinkErrors();
 
 public:
 	ShaderProgram(const std::string& vShaderFile, const std::string& fShaderFile);
+	ShaderProgram(const std::string& vShaderFile, const std::string& fShaderFile, const std::string& gShaderFile);
 	~ShaderProgram();
 	void BindAttribLoc(GLuint loc, const char* name);
 	void Link();

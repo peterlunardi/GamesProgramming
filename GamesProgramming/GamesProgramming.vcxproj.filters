@@ -78,6 +78,12 @@
     <ClCompile Include="Light.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ConeShape.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CylinderShape.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -155,6 +161,12 @@
     <ClInclude Include="Light.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ConeShape.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CylinderShape.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\assets\simple_VERT.glsl">
@@ -179,6 +191,15 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="..\assets\lightSource_VERT.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\assets\water_FRAG.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\assets\water_GEOM.glsl">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="..\assets\water_VERT.glsl">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

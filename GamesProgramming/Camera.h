@@ -10,7 +10,7 @@ enum CameraMovement { FORWARD, BACKWARD, LEFT, RIGHT, UP, DOWN };
 //Default camera values
 const float YAW = -90.0f;
 const float PITCH = 0.0f;
-const float SPEED = 0.5f;
+const float SPEED = 2.5f;
 const float SENSITIVITY = 0.1f;
 
 class Camera
@@ -20,7 +20,7 @@ private:
 	glm::mat4 m_projMatrix, m_viewMatrix, VP;
 	CameraType m_type = CameraType::PERSPECTIVE;
 
-	float m_nearPlane = 0.1f;
+	float m_nearPlane = 1.0f;
 	float m_farPlane = 1000.f;
 	union
 	{

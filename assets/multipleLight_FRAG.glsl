@@ -5,15 +5,21 @@ out vec4 fragColor;
 in vec2 pass_texCoord;
 in vec3 surfaceNormal;
 in vec3 toLightVector[4];
+in vec3 worldPosition;
 
 uniform sampler2D ourTexture;
 uniform vec3 lightColour[4];
+uniform vec3 viewPos;
 
 void main()
 {
 	vec3 unitNormal = normalize(surfaceNormal);
+	vec3 viewDir = normalize(viewPos - worldPosition);
 
 	vec3 totalDiffuse = vec3(0.0);
+	vec3 totalSpecular = vec3(0.0);
+
+	float specularStrength = 1.0;
 
 	for(int i = 0; i < 4; i++)
 	{
@@ -21,9 +27,17 @@ void main()
 		float nDotl = dot(unitNormal, unitLightVector);
 		float brightness = max(nDotl, 0.0);
 		totalDiffuse = totalDiffuse + brightness * lightColour[i];
+
+		vec3 reflectDir = reflect(-unitLightVector, unitNormal);
+		float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
+		vec3 specular = specularStrength * spec * lightColour[i];
+		totalSpecular = totalSpecular + specular;
+
 	}
 	
-	totalDiffuse = max(totalDiffuse, 0.2);
+	totalDiffuse = max(totalDiffuse, 0.1);
 
-	fragColor = vec4(totalDiffuse, 1.0) * texture(ourTexture, pass_texCoord);
+	vec3 result = totalDiffuse + totalSpecular;
+
+	fragColor = vec4(result, 1.0) * texture(ourTexture, pass_texCoord);
 }

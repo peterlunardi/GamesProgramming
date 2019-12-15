@@ -45,8 +45,41 @@ void RigidBody::UpdateRigidBody()
 	btTransform t = Physics::ConvertTransformToBtTransform(*m_entity->GetTransform());
 	
 	m_rigidBody->setWorldTransform(t);
-	m_rigidBody->getMotionState()->setWorldTransform(t);
+	m_rigidBody->getMotionState()->setWorldTransform(t);	
+}
 
-	
+void RigidBody::ApplyForce(float f)
+{
+	btTransform bt;
+	m_rigidBody->getMotionState()->getWorldTransform(bt);
+	//m_rigidBody->applyForce(btVector3(0, -2, 1), m_rigidBody->getCenterOfMassPosition());
+	m_rigidBody->applyCentralImpulse(btVector3(1 * f, 0, 0));
+	//m_rigidBody->applyCentralForce(btVector3(100, 0, 0));
+
+	m_entity->GetTransform()->SetRotation(glm::quat(bt.getRotation().getW(), bt.getRotation().getX(), bt.getRotation().getY(), bt.getRotation().getZ()));
+	m_entity->GetTransform()->SetPosition(glm::vec3(bt.getOrigin().getX(), bt.getOrigin().getY(), bt.getOrigin().getZ()));
+}
+
+void RigidBody::ApplyForce(btVector3 forceVector)
+{
+	btTransform bt;
+	m_rigidBody->getMotionState()->getWorldTransform(bt);
+	//m_rigidBody->applyForce(btVector3(0, -2, 1), m_rigidBody->getCenterOfMassPosition());
+	m_rigidBody->applyCentralImpulse(forceVector);
+	//m_rigidBody->applyCentralForce(btVector3(100, 0, 0));
+
+	m_entity->GetTransform()->SetRotation(glm::quat(bt.getRotation().getW(), bt.getRotation().getX(), bt.getRotation().getY(), bt.getRotation().getZ()));
+	m_entity->GetTransform()->SetPosition(glm::vec3(bt.getOrigin().getX(), bt.getOrigin().getY(), bt.getOrigin().getZ()));
+}
+
+void RigidBody::ApplyTorque(float f)
+{
+	btTransform bt;
+	m_rigidBody->getMotionState()->getWorldTransform(bt);
+
+	m_rigidBody->applyTorqueImpulse(btVector3(1 * f, 0, 0));
+
+	m_entity->GetTransform()->SetRotation(glm::quat(bt.getRotation().getW(), bt.getRotation().getX(), bt.getRotation().getY(), bt.getRotation().getZ()));
+	m_entity->GetTransform()->SetPosition(glm::vec3(bt.getOrigin().getX(), bt.getOrigin().getY(), bt.getOrigin().getZ()));
 }
 

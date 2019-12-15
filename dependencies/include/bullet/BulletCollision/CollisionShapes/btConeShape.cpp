@@ -15,6 +15,13 @@ subject to the following restrictions:
 
 #include "btConeShape.h"
 
+#ifdef WIN32
+//static int coneindices[3] = {1,2,0};
+[b]static int coneindices[3] = { 2,1,0 }; [/ b]
+#else
+static int coneindices[3] = { 2,1,0 };
+#endif
+
 btConeShape::btConeShape(btScalar radius, btScalar height) : btConvexInternalShape(),
 															 m_radius(radius),
 															 m_height(height)

@@ -196,6 +196,8 @@ xcopy "$(SolutionDir)assets" "$(OutDir)assets" /Y /I</Command>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CameraComp.cpp" />
     <ClCompile Include="CollisionShape.cpp" />
+    <ClCompile Include="ConeShape.cpp" />
+    <ClCompile Include="CylinderShape.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="GamesProgramming.cpp" />
     <ClCompile Include="Input.cpp" />
@@ -220,6 +222,8 @@ xcopy "$(SolutionDir)assets" "$(OutDir)assets" /Y /I</Command>
     <ClInclude Include="CameraComp.h" />
     <ClInclude Include="CollisionShape.h" />
     <ClInclude Include="Component.h" />
+    <ClInclude Include="ConeShape.h" />
+    <ClInclude Include="CylinderShape.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="InputState.h" />
@@ -255,6 +259,9 @@ xcopy "$(SolutionDir)assets" "$(OutDir)assets" /Y /I</Command>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </None>
     <None Include="..\assets\simple_VERT.glsl" />
+    <None Include="..\assets\water_FRAG.glsl" />
+    <None Include="..\assets\water_GEOM.glsl" />
+    <None Include="..\assets\water_VERT.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

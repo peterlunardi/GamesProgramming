@@ -104,7 +104,7 @@ void Camera::SetProjPersp(float fov, float ratio, float nearPlane, float farPlan
 	m_fov = fov;
 	m_ratio = ratio;
 	pos = m_parentTransform->GetPosition();
-	forward = glm::vec3(0.0f, 0.0f, -1.0f);
+	forward = glm::vec3(1.0f, -1.0f, -1.0f);
 	worldUp = glm::vec3(0.0f, 1.0f, 0.0f);
 	m_projMatrix = glm::perspective(fov, ratio, nearPlane, farPlane);
 }
