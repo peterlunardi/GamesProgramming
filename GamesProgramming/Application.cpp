@@ -13,11 +13,17 @@
 #include "Light.h"
 #include "ConeShape.h"
 #include "CylinderShape.h"
+#include <imgui/imgui.h>
+#include <imgui/imgui_impl_sdl_gl3.h>
 
 Application* Application::m_application = nullptr;
 float counter = 0;
 float counter2 = 0;
 float counter3 = 0;
+
+ImVec4 lightColour1 = ImVec4(0.95f, 0.05f, 0.05f, 1.00f);
+ImVec4 lightColour2 = ImVec4(0.05f, 0.95f, 0.05f, 1.00f);
+ImVec4 lightColour3 = ImVec4(0.05f, 0.05f, 0.95f, 1.00f);
 
 Application::Application()
 {
@@ -54,6 +60,10 @@ void Application::Init()
 
 	OpenGlInit();
 	GameInit();
+
+	ImGui::CreateContext();
+	ImGui_ImplSdlGL3_Init(m_window);
+	ImGui::StyleColorsDark();
 }
 
 void Application::OpenGlInit()
@@ -202,7 +212,6 @@ void Application::GameInit()
 			Resources::GetInstance()->GetShader("multiLight"),
 			Resources::GetInstance()->GetTexture("turkey.jpg"))
 	);
-	MeshRenderer* m = a->GetComponent<MeshRenderer>();
 	a->GetTransform()->SetPosition(glm::vec3(-50, 5, 5));
 	a->AddComponent<RigidBody>();
 	a->GetComponent<RigidBody>()->Init(new SphereShape(5.f), 30.0f);
@@ -230,21 +239,6 @@ void Application::GameInit()
 		}
 	}
 
-	//penguin!!-----------------------------------------
-	a = new Entity();
-	m_entities.push_back(a);
-	a->AddComponent(
-		new MeshRenderer(
-			Resources::GetInstance()->GetModel("penguin.obj"),
-			Resources::GetInstance()->GetShader("lighting"),
-			Resources::GetInstance()->GetTexture("penguinTex.png"))
-	);
-	m = a->GetComponent<MeshRenderer>();
-	a->GetTransform()->SetPosition(glm::vec3(10, 5, -10));
-	a->AddComponent<RigidBody>();
-	a->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(0.5f, 0.5f, 0.5f)));
-	a->GetTransform()->SetScale(glm::vec3(1.f, 1.f, 1.f));
-
 	a = new Entity();
 	m_entities.push_back(a);
 	a->AddComponent(
@@ -253,7 +247,6 @@ void Application::GameInit()
 			Resources::GetInstance()->GetShader("multiLight"),
 			Resources::GetInstance()->GetTexture("ball.jpg"))
 	);
-	m = a->GetComponent<MeshRenderer>();
 	a->GetTransform()->SetPosition(glm::vec3(-40, 5, 50));
 	a->AddComponent<RigidBody>();
 	a->GetComponent<RigidBody>()->Init(new SphereShape(3.5f));
@@ -267,7 +260,6 @@ void Application::GameInit()
 			Resources::GetInstance()->GetShader("multiLight"),
 			Resources::GetInstance()->GetTexture("barrel.jpg"))
 	);
-	m = a->GetComponent<MeshRenderer>();
 	a->GetTransform()->SetPosition(glm::vec3(80, 5, 50));
 	a->AddComponent<RigidBody>();
 	a->GetComponent<RigidBody>()->Init(new CylinderShape(glm::vec3(2.f, 3.f, 0.8f)), 0.2f);
@@ -281,7 +273,6 @@ void Application::GameInit()
 			Resources::GetInstance()->GetShader("water"),
 			Resources::GetInstance()->GetTexture("barrel.jpg"))
 	);
-	m = a->GetComponent<MeshRenderer>();
 	a->GetTransform()->SetPosition(glm::vec3(0, -5, 200));
 
 	//CONES---------------------------------------------
@@ -295,7 +286,6 @@ void Application::GameInit()
 					Resources::GetInstance()->GetShader("multiLight"),
 					Resources::GetInstance()->GetTexture("cone.jpg"))
 			);
-			m = a->GetComponent<MeshRenderer>();
 			a->GetTransform()->SetPosition(glm::vec3(5 * x, 1, 5*y));
 			a->AddComponent<RigidBody>();
 			a->GetComponent<RigidBody>()->Init(new ConeShape(4.f, 11.f), 0.1f);
@@ -347,17 +337,16 @@ void Application::Loop()
 	m_appState = AppState::RUNNING;
 	auto prevTicks = std::chrono::high_resolution_clock::now();
 
+	bool show_demo_window = true;
+	bool show_another_window = false;
+	
+
 	while (m_appState != AppState::QUITTING)
 	{
 		auto currentTicks = std::chrono::high_resolution_clock::now();
 		float deltaTime = (float)std::chrono::duration_cast<std::chrono::microseconds>(currentTicks - prevTicks).count() / 100000;
 		m_worldDeltaTime = deltaTime;
 		prevTicks = currentTicks;
-
-		Resources::GetInstance()->GetShader("lighting")->Use();
-		Resources::GetInstance()->GetShader("lighting")->setVec3("lightColour", m_lights[0]->GetComponent<Light>()->GetColour());
-		Resources::GetInstance()->GetShader("lighting")->setVec3("lightPos", m_lights[0]->GetTransform()->GetPosition());
-		Resources::GetInstance()->GetShader("lighting")->setVec3("viewPos", m_mainCamera->GetParentTransform()->GetPosition());
 
 		Resources::GetInstance()->GetShader("water")->Use();
 		Resources::GetInstance()->GetShader("water")->setVec3("cameraPosition", m_mainCamera->GetParentTransform()->GetPosition());
@@ -375,6 +364,10 @@ void Application::Loop()
 		Z = -20 + sinf(counter2) * 70;
 		m_lights[3]->GetTransform()->SetPosition(glm::vec3(X, 10, Z));
 
+		m_lights[1]->GetComponent<Light>()->SetColour(glm::vec3(lightColour1.x, lightColour1.y, lightColour1.z));
+		m_lights[2]->GetComponent<Light>()->SetColour(glm::vec3(lightColour2.x, lightColour2.y, lightColour2.z));
+		m_lights[3]->GetComponent<Light>()->SetColour(glm::vec3(lightColour3.x, lightColour3.y, lightColour3.z));
+
 		LoadLights(m_lights);
 		ProcessInput(deltaTime);
 		counter += deltaTime * 0.6f;
@@ -383,6 +376,38 @@ void Application::Loop()
 		Physics::GetInstance()->Update(deltaTime);
 		Update(deltaTime);
 		Render();
+
+		if (SDL_GetRelativeMouseMode() == SDL_FALSE)
+		{
+			ImGui_ImplSdlGL3_NewFrame(m_window);
+
+			ImGui::Begin("Window!");
+
+			static float f = 0.0f;
+			static int counter = 0;
+			ImGui::Text("Hello, world!");                           // Display some text (you can use a format string too)
+			ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f    
+			ImGui::ColorEdit3("light colour 1", (float*)&lightColour1);
+			ImGui::ColorEdit3("light colour 2", (float*)&lightColour2); 
+			ImGui::ColorEdit3("light colour 3", (float*)&lightColour3); // Edit 3 floats representing a color
+
+			ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our windows open/close state
+			ImGui::Checkbox("Another Window", &show_another_window);
+
+			if (ImGui::Button("Button"))                            // Buttons return true when clicked (NB: most widgets return true when edited/activated)
+				counter++;
+			ImGui::SameLine();
+			ImGui::Text("counter = %d", counter);
+
+			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+
+			ImGui::End();
+
+			ImGui::Render();
+			ImGui_ImplSdlGL3_RenderDrawData(ImGui::GetDrawData());
+
+			
+		}
 
 		SDL_GL_SwapWindow(m_window);
 	}
@@ -407,11 +432,22 @@ void Application::ProcessInput(float deltaTime)
 			INPUT->SetKey(event.key.keysym.sym, true);
 			break;
 			//record when the user releases a key
+		case SDL_KEYUP:
+			switch (event.key.keysym.sym)
+			{
+			case SDLK_q:
+				SDL_bool mouse = SDL_GetRelativeMouseMode();
+				if (mouse == SDL_TRUE)
+					SDL_SetRelativeMouseMode(SDL_FALSE);
+				else
+					SDL_SetRelativeMouseMode(SDL_TRUE);
+			}
+			break;
 		case SDL_MOUSEMOTION:
 			INPUT->MoveMouse(glm::ivec2(event.motion.xrel, event.motion.yrel));
 
-			int xpos = event.motion.x;
-			int ypos = event.motion.y;
+			int xpos = event.motion.xrel;
+			int ypos = event.motion.yrel;
 
 			if (firstMouse)
 			{
@@ -426,9 +462,11 @@ void Application::ProcessInput(float deltaTime)
 			lastX = xpos;
 			lastY = ypos;
 
-			m_mainCamera->ProcessMouseMovement(xoffset, yoffset);
+			m_mainCamera->ProcessMouseMovement(xpos, -ypos);
 		}
 	}
+
+	
 
 	const Uint8* keystates = SDL_GetKeyboardState(NULL);
 
@@ -518,6 +556,10 @@ void Application::SetCamera(Camera* camera)
 
 void Application::Quit()
 {
+	//cleanup imgui
+	ImGui_ImplSdlGL3_Shutdown();
+	ImGui::DestroyContext();
+
 	//Close SDL
 	Physics::GetInstance()->Quit();
 	SDL_GL_DeleteContext(m_glContext);
@@ -528,6 +570,8 @@ void Application::Quit()
 
 Application::~Application()
 {
+	for (auto& a : m_entities)
+		delete a;
 }
 
 Application* Application::GetInstance()

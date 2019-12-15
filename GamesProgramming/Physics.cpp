@@ -32,7 +32,7 @@ void Physics::PreUpdate()
 void Physics::Update(float deltaTime)
 {
 	PreUpdate();
-	m_world->stepSimulation(deltaTime, 4);
+	m_world->stepSimulation(deltaTime, 2, 0.067f);
 	for (auto r : m_rbodies)
 	{
 		r->UpdateParent();

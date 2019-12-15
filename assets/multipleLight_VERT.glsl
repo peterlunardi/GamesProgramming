@@ -20,7 +20,7 @@ void main ()
 	pass_texCoord = aTexCoord;
 	worldPosition = worldPos.xyz;
 
-	surfaceNormal = (model * vec4(aNormal, 0.0)).xyz; //could transpose and inverse this to account for scaling???
+	surfaceNormal = mat3(transpose(inverse(model))) * aNormal; 
 	for(int i = 0; i < 4; i++) 
 	{
 		toLightVector[i] = lightPos[i] - worldPos.xyz;

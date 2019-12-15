@@ -200,6 +200,10 @@ xcopy "$(SolutionDir)assets" "$(OutDir)assets" /Y /I</Command>
     <ClCompile Include="CylinderShape.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="GamesProgramming.cpp" />
+    <ClCompile Include="imgui\imgui.cpp" />
+    <ClCompile Include="imgui\imgui_demo.cpp" />
+    <ClCompile Include="imgui\imgui_draw.cpp" />
+    <ClCompile Include="imgui\imgui_impl_sdl_gl3.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="Log.cpp" />
@@ -225,6 +229,13 @@ xcopy "$(SolutionDir)assets" "$(OutDir)assets" /Y /I</Command>
     <ClInclude Include="ConeShape.h" />
     <ClInclude Include="CylinderShape.h" />
     <ClInclude Include="Entity.h" />
+    <ClInclude Include="imgui\imconfig.h" />
+    <ClInclude Include="imgui\imgui.h" />
+    <ClInclude Include="imgui\imgui_impl_sdl_gl3.h" />
+    <ClInclude Include="imgui\imgui_internal.h" />
+    <ClInclude Include="imgui\stb_rect_pack.h" />
+    <ClInclude Include="imgui\stb_textedit.h" />
+    <ClInclude Include="imgui\stb_truetype.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="InputState.h" />
     <ClInclude Include="Light.h" />

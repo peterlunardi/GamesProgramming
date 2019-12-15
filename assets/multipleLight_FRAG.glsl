@@ -19,7 +19,7 @@ void main()
 	vec3 totalDiffuse = vec3(0.0);
 	vec3 totalSpecular = vec3(0.0);
 
-	float specularStrength = 1.0;
+	float specularStrength = 0.5;
 
 	for(int i = 0; i < 4; i++)
 	{
@@ -29,7 +29,7 @@ void main()
 		totalDiffuse = totalDiffuse + brightness * lightColour[i];
 
 		vec3 reflectDir = reflect(-unitLightVector, unitNormal);
-		float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
+		float spec = pow(max(dot(viewDir, reflectDir), 0.0), 16);
 		vec3 specular = specularStrength * spec * lightColour[i];
 		totalSpecular = totalSpecular + specular;
 

@@ -56,15 +56,29 @@ std::shared_ptr<Texture> Resources::GetTexture(const std::string& name)
 
 void Resources::ReleaseResources()
 {
-	//using an iterator pattern to iterate through all elements
-	//for (auto iter = m_models.begin(); iter != m_models.end(); iter++)
-	//	delete iter->second;
-	//
-	//for (auto iter = m_textures.begin(); iter != m_textures.end(); iter++)
-	//	delete iter->second;
-	//
-	//for (auto iter = m_shaderPrograms.begin(); iter != m_shaderPrograms.end(); iter++)
-	//	delete iter->second;
+	for (auto iter = m_shaderPrograms.begin(); iter != m_shaderPrograms.end(); iter++)
+	{
+		if (iter->second.use_count() <= 1)
+		{
+			iter->second.reset();
+		}
+	}
 
-	//TODO: release other resources properly
+	for (auto iter = m_models.begin(); iter != m_models.end(); iter++)
+	{
+		if (iter->second.use_count() <= 1)
+		{
+			iter->second.reset();
+
+		}
+	}
+
+	for (auto iter = m_textures.begin(); iter != m_textures.end(); iter++)
+	{
+		if (iter->second.use_count() <= 1)
+		{
+			iter->second.reset();
+		}
+	}
+
 }
