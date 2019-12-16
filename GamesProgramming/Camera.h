@@ -8,8 +8,8 @@ enum CameraType { PERSPECTIVE, ORTHOGRAPHIC };
 enum CameraMovement { FORWARD, BACKWARD, LEFT, RIGHT, UP, DOWN };
 
 //Default camera values
-const float YAW = -90.0f;
-const float PITCH = 0.0f;
+const float YAW = 45.0f;
+const float PITCH = -30.0f;
 const float SPEED = 2.5f;
 const float SENSITIVITY = 0.1f;
 
@@ -41,7 +41,7 @@ private:
 	glm::vec3 pos;
 	glm::vec3 forward;
 	glm::vec3 worldUp;
-	void UpdateCameraVectors();
+	
 
 public:
 	//camera attributes
@@ -60,6 +60,7 @@ public:
 	void ProcessMouseMovement(float xoffset, float yoffset);
 
 	void Recalculate();
+	void UpdateCameraVectors();
 
 	inline glm::mat4 Get() { return VP; }
 

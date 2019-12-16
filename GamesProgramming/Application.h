@@ -23,9 +23,9 @@ private:
 	int m_windowHeight = 720;
 	AppState m_appState = AppState::INITILISING;
 	float m_worldDeltaTime = 0.f;
-	float lastX;
-	float lastY;
-	bool firstMouse = true;
+	//float lastX;
+	//float lastY;
+	//bool firstMouse = true;
 	bool boom = false;
 
 	std::vector<Entity*> m_entities;
@@ -43,7 +43,7 @@ private:
 	void GameInit();
 	void MapInit();
 	void WallInit(float xPos, float zPos, float xScale, float zScale);
-	void CreateLight(glm::vec3 position, glm::vec3 colour);
+	void CreateLight(glm::vec3 position, glm::vec3 colour, glm::vec3 attenuation);
 	void Loop();
 	void Quit();
 	void Update(float deltaTime);

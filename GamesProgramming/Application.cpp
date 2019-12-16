@@ -54,9 +54,9 @@ void Application::Init()
 		SDL_WINDOW_OPENGL
 	);
 	SDL_CaptureMouse(SDL_TRUE);
-	SDL_SetRelativeMouseMode(SDL_TRUE);
-	lastX = m_windowWidth / 2;
-	lastY = m_windowHeight / 2;
+	SDL_SetRelativeMouseMode(SDL_FALSE);
+	//lastX = m_windowWidth / 2;
+	//lastY = m_windowHeight / 2;
 
 	OpenGlInit();
 	GameInit();
@@ -138,7 +138,7 @@ void Application::MapInit()
 	a->GetComponent<RigidBody>()->Get()->setMassProps(0, btVector3());
 	a->GetTransform()->SetScale(glm::vec3(100.f, 1.f, 100.f));
 
-	//The ground!
+	//The ground! (underwater)
 	a = new Entity();
 	m_entities.push_back(a);
 	a->AddComponent(
@@ -162,7 +162,7 @@ void Application::MapInit()
 	WallInit(100.f, 200.f, 1.f, 100.f);
 }
 
-void Application::CreateLight(glm::vec3 position, glm::vec3 colour)
+void Application::CreateLight(glm::vec3 position, glm::vec3 colour, glm::vec3 attenuation)
 {
 	Entity* a = new Entity();
 	m_entities.push_back(a);
@@ -175,7 +175,7 @@ void Application::CreateLight(glm::vec3 position, glm::vec3 colour)
 	);
 	a->GetTransform()->SetPosition(position);
 	a->GetTransform()->SetScale(glm::vec3(0.5f, 0.5f, 0.5f));
-	a->AddComponent(new Light(a->GetTransform()->GetPosition(), colour));
+	a->AddComponent(new Light(a->GetTransform()->GetPosition(), colour, attenuation));
 }
 
 void Application::GameInit()
@@ -231,7 +231,7 @@ void Application::GameInit()
 						Resources::GetInstance()->GetShader("multiLight"),
 						Resources::GetInstance()->GetTexture("Wood.jpg"))
 				);
-				a->GetTransform()->SetPosition(glm::vec3(50 - 2*x, 1 * i, -40 + 2*z));
+				a->GetTransform()->SetPosition(glm::vec3(50 - 2 * x, 1 * i, -40 + 2 * z));
 				a->AddComponent<RigidBody>();
 				a->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(1.f, 1.f, 1.f)), 0.2f);
 				a->GetTransform()->SetScale(glm::vec3(1.f, 1.f, 1.f));
@@ -239,34 +239,43 @@ void Application::GameInit()
 		}
 	}
 
-	a = new Entity();
-	m_entities.push_back(a);
-	a->AddComponent(
-		new MeshRenderer(
-			Resources::GetInstance()->GetModel("ball.obj"),
-			Resources::GetInstance()->GetShader("multiLight"),
-			Resources::GetInstance()->GetTexture("ball.jpg"))
-	);
-	a->GetTransform()->SetPosition(glm::vec3(-40, 5, 50));
-	a->AddComponent<RigidBody>();
-	a->GetComponent<RigidBody>()->Init(new SphereShape(3.5f));
-	a->GetTransform()->SetScale(glm::vec3(1.f, 1.f, 1.f));
+	//spawn beach balls!==========================================
+	for (int i = 0; i < 20; i++)
+	{
+		a = new Entity();
+		m_entities.push_back(a);
+		a->AddComponent(
+			new MeshRenderer(
+				Resources::GetInstance()->GetModel("ball.obj"),
+				Resources::GetInstance()->GetShader("multiLight"),
+				Resources::GetInstance()->GetTexture("ball.jpg"))
+		);
+		a->GetTransform()->SetPosition(glm::vec3(0, 5 * i, 200));
+		a->AddComponent<RigidBody>();
+		a->GetComponent<RigidBody>()->Init(new SphereShape(3.5f), 0.01f);
+	}
 
-	a = new Entity();
-	m_entities.push_back(a);
-	a->AddComponent(
-		new MeshRenderer(
-			Resources::GetInstance()->GetModel("barrel.obj"),
-			Resources::GetInstance()->GetShader("multiLight"),
-			Resources::GetInstance()->GetTexture("barrel.jpg"))
-	);
-	a->GetTransform()->SetPosition(glm::vec3(80, 5, 50));
-	a->AddComponent<RigidBody>();
-	a->GetComponent<RigidBody>()->Init(new CylinderShape(glm::vec3(2.f, 3.f, 0.8f)), 0.2f);
-	a->GetTransform()->SetScale(glm::vec3(1.f, 1.f, 1.f));
+	//barrels!! ===================================================
+	for (int i = 0; i < 10; i++)
+	{
+		a = new Entity();
+		m_entities.push_back(a);
+		a->AddComponent(
+			new MeshRenderer(
+				Resources::GetInstance()->GetModel("barrel.obj"),
+				Resources::GetInstance()->GetShader("multiLight"),
+				Resources::GetInstance()->GetTexture("barrel.jpg"))
+		);
+		a->GetTransform()->SetPosition(glm::vec3(80, 5 * i, 50));
+		a->AddComponent<RigidBody>();
+		a->GetComponent<RigidBody>()->Init(new CylinderShape(glm::vec3(2.f, 3.f, 0.8f)), 2.f);
+	}
+	
 
+	//THE WATER========================================================
 	a = new Entity();
 	m_entities.push_back(a);
+	m_lights.push_back(a);
 	a->AddComponent(
 		new MeshRenderer(
 			Resources::GetInstance()->GetModel("plane.obj"),
@@ -274,8 +283,9 @@ void Application::GameInit()
 			Resources::GetInstance()->GetTexture("barrel.jpg"))
 	);
 	a->GetTransform()->SetPosition(glm::vec3(0, -5, 200));
+	a->AddComponent(new Light(a->GetTransform()->GetPosition(), glm::vec3(0.f, 0.2f, 0.6f), glm::vec3(0.75f, 0.00001f, 0.000001f)));
 
-	//CONES---------------------------------------------
+	//CONES============================================================
 	for (int x = 1; x < 5; x++) {
 		for (int y = 1; y < 2 * x; y++) {
 			a = new Entity();
@@ -286,28 +296,29 @@ void Application::GameInit()
 					Resources::GetInstance()->GetShader("multiLight"),
 					Resources::GetInstance()->GetTexture("cone.jpg"))
 			);
-			a->GetTransform()->SetPosition(glm::vec3(5 * x, 1, 5*y));
+			a->GetTransform()->SetPosition(glm::vec3(5 * x, 1, 5 * y));
 			a->AddComponent<RigidBody>();
 			a->GetComponent<RigidBody>()->Init(new ConeShape(4.f, 11.f), 0.1f);
 		}
 	}
 
 	//LIGHT ENTITIES---------------------
-	CreateLight(glm::vec3(20.0f, 20.0f, 0.0f), glm::vec3(0.1f, 0.1f, 0.1f));
-	CreateLight(glm::vec3(-10.0f, 1.0f, -50.0f), glm::vec3(1.f, 0.0f, 0.1f));
-	CreateLight(glm::vec3(-10.0f, 1.0f, 20.0f), glm::vec3(0.1f, 0.1f, 1.f));
-	CreateLight(glm::vec3(-20.0f, 1.0f, 0.0f), glm::vec3(0.1f, 1.f, 0.1f));
+	//CreateLight(glm::vec3(20.0f, 200.0f, 0.0f), glm::vec3(0.3f, 0.3f, 0.3f), glm::vec3(1, 0.001f, 0.000001f));
+	CreateLight(glm::vec3(-10.0f, 1.0f, -50.0f), glm::vec3(1.f, 0.0f, 0.1f), glm::vec3(0.7, 0.01f, 0.01f));
+	CreateLight(glm::vec3(-10.0f, 1.0f, 20.0f), glm::vec3(0.1f, 1.0f, 0.f), glm::vec3(0.7, 0.01f, 0.00002f));
+	CreateLight(glm::vec3(-20.0f, 1.0f, 0.0f), glm::vec3(0.1f, 0.f, 1.0f), glm::vec3(0.7, 0.01f, 0.0002f));
+
 
 	a = new Entity();
 	m_entities.push_back(a);
-	a->GetTransform()->SetPosition(glm::vec3(-50, 25, -5));
+	a->GetTransform()->SetPosition(glm::vec3(-80, 55, -80));
 	CameraComp* cc = new CameraComp();
 	a->AddComponent(cc);
 	a->AddComponent<RigidBody>();
 	a->GetComponent<RigidBody>()->Init(new BoxShape(glm::vec3(5.f, 5.f, 5.f)), 0.f);
 	cc->Start();
 
-
+	m_mainCamera->UpdateCameraVectors();
 }
 
 void Application::LoadLights(std::vector<Entity*> lights)
@@ -319,15 +330,18 @@ void Application::LoadLights(std::vector<Entity*> lights)
 	{
 		std::string colourStr = std::string("lightColour[") + std::to_string(i) + std::string("]");
 		std::string posStr = std::string("lightPos[") + std::to_string(i) + std::string("]");
+		std::string attStr = std::string("attenuation[" + std::to_string(i) + std::string("]"));
 
 		if (i < m_lights.size())
 		{
 			Resources::GetInstance()->GetShader("multiLight")->setVec3(colourStr, lights[i]->GetComponent<Light>()->GetColour());
 			Resources::GetInstance()->GetShader("multiLight")->setVec3(posStr, lights[i]->GetTransform()->GetPosition());
+			Resources::GetInstance()->GetShader("multiLight")->setVec3(attStr, lights[i]->GetComponent<Light>()->GetAtten());
 		}
 		else {
 			Resources::GetInstance()->GetShader("multiLight")->setVec3(colourStr, glm::vec3(0, 0, 0));
 			Resources::GetInstance()->GetShader("multiLight")->setVec3(posStr, glm::vec3(0, 0, 0));
+			Resources::GetInstance()->GetShader("multiLight")->setVec3(posStr, glm::vec3(1, 0, 0));
 		}
 	}
 }
@@ -339,7 +353,7 @@ void Application::Loop()
 
 	bool show_demo_window = true;
 	bool show_another_window = false;
-	
+
 
 	while (m_appState != AppState::QUITTING)
 	{
@@ -384,29 +398,37 @@ void Application::Loop()
 			ImGui::Begin("Window!");
 
 			static float f = 0.0f;
-			static int counter = 0;
-			ImGui::Text("Hello, world!");                           // Display some text (you can use a format string too)
-			ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f    
+
+			ImGui::Text("Press Q to show/hide GUI!");
+			ImGui::Text("Use the mouse to look around!");
+			ImGui::Text("WASD to move!  Shft/Ctrl to move up and down.");
+			ImGui::Text("Use the arrow keys to roll the turkey around.");
+			ImGui::Text("Up/down to apply force, left/right to apply torque.");
+
 			ImGui::ColorEdit3("light colour 1", (float*)&lightColour1);
-			ImGui::ColorEdit3("light colour 2", (float*)&lightColour2); 
+			ImGui::ColorEdit3("light colour 2", (float*)&lightColour2);
 			ImGui::ColorEdit3("light colour 3", (float*)&lightColour3); // Edit 3 floats representing a color
 
-			ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our windows open/close state
-			ImGui::Checkbox("Another Window", &show_another_window);
-
-			if (ImGui::Button("Button"))                            // Buttons return true when clicked (NB: most widgets return true when edited/activated)
-				counter++;
+			if (ImGui::Button("BOX EXPLOSION!"))                            // Buttons return true when clicked (NB: most widgets return true when edited/activated)
+				if (boom == false)
+				{
+					glm::vec3 explosionPoint = m_boxes[m_boxes.size() / 2]->GetTransform()->GetPosition();
+					for (int i = 0; i < m_boxes.size(); i++)
+					{
+						glm::vec3 forceVector = glm::normalize(m_boxes[i]->GetTransform()->GetPosition() - explosionPoint);
+						m_boxes[i]->GetComponent<RigidBody>()->ApplyForce(btVector3(forceVector.x, forceVector.y, forceVector.z) * 5);
+					}
+					boom = true;
+				}
 			ImGui::SameLine();
-			ImGui::Text("counter = %d", counter);
-
-			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+			ImGui::Text("Apply a force to the pile of boxes! (spacebar works too)");
 
 			ImGui::End();
 
 			ImGui::Render();
 			ImGui_ImplSdlGL3_RenderDrawData(ImGui::GetDrawData());
 
-			
+
 		}
 
 		SDL_GL_SwapWindow(m_window);
@@ -449,81 +471,87 @@ void Application::ProcessInput(float deltaTime)
 			int xpos = event.motion.xrel;
 			int ypos = event.motion.yrel;
 
-			if (firstMouse)
+			//if (firstMouse)
+			//{
+			//	lastX = xpos;
+			//	lastY = ypos;
+			//	firstMouse = false;
+			//}
+			//
+			//float xoffset = xpos - lastX;
+			//float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+			//
+			//lastX = xpos;
+			//lastY = ypos;
+
+			if (SDL_GetRelativeMouseMode() == SDL_TRUE)
+				m_mainCamera->ProcessMouseMovement(xpos, -ypos);
+		}
+	}
+
+
+
+	const Uint8* keystates = SDL_GetKeyboardState(NULL);
+
+	if (SDL_GetRelativeMouseMode() == SDL_TRUE)
+	{
+		if (keystates[SDL_SCANCODE_W])
+		{
+			m_mainCamera->ProcessKeyboard(FORWARD, deltaTime);
+		}
+		if (keystates[SDL_SCANCODE_A])
+		{
+			m_mainCamera->ProcessKeyboard(LEFT, deltaTime);
+		}
+		if (keystates[SDL_SCANCODE_S])
+		{
+			m_mainCamera->ProcessKeyboard(BACKWARD, deltaTime);
+		}
+		if (keystates[SDL_SCANCODE_D])
+		{
+			m_mainCamera->ProcessKeyboard(RIGHT, deltaTime);
+		}
+		if (keystates[SDL_SCANCODE_LSHIFT])
+		{
+			m_mainCamera->ProcessKeyboard(UP, deltaTime);
+		}
+		if (keystates[SDL_SCANCODE_LCTRL])
+		{
+			m_mainCamera->ProcessKeyboard(DOWN, deltaTime);
+		}
+		if (keystates[SDL_SCANCODE_UP])
+		{
+			m_entities.at(8)->GetComponent<RigidBody>()->ApplyForce(30);
+		}
+		if (keystates[SDL_SCANCODE_DOWN])
+		{
+			m_entities.at(8)->GetComponent<RigidBody>()->ApplyForce(-30);
+		}
+		if (keystates[SDL_SCANCODE_LEFT])
+		{
+			m_entities.at(8)->GetComponent<RigidBody>()->ApplyTorque(-30);
+		}
+		if (keystates[SDL_SCANCODE_RIGHT])
+		{
+			m_entities.at(8)->GetComponent<RigidBody>()->ApplyTorque(30);
+		}
+		if (keystates[SDL_SCANCODE_SPACE])
+		{
+			if (boom == false)
 			{
-				lastX = xpos;
-				lastY = ypos;
-				firstMouse = false;
+				glm::vec3 explosionPoint = m_boxes[m_boxes.size() / 2]->GetTransform()->GetPosition();
+				for (int i = 0; i < m_boxes.size(); i++)
+				{
+					glm::vec3 forceVector = glm::normalize(m_boxes[i]->GetTransform()->GetPosition() - explosionPoint);
+					m_boxes[i]->GetComponent<RigidBody>()->ApplyForce(btVector3(forceVector.x, forceVector.y, forceVector.z) * 5);
+				}
+				boom = true;
 			}
 
-			float xoffset = xpos - lastX;
-			float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
-
-			lastX = xpos;
-			lastY = ypos;
-
-			m_mainCamera->ProcessMouseMovement(xpos, -ypos);
 		}
 	}
 
 	
-
-	const Uint8* keystates = SDL_GetKeyboardState(NULL);
-
-	if (keystates[SDL_SCANCODE_W])
-	{
-		m_mainCamera->ProcessKeyboard(FORWARD, deltaTime);
-	}
-	if (keystates[SDL_SCANCODE_A])
-	{
-		m_mainCamera->ProcessKeyboard(LEFT, deltaTime);
-	}
-	if (keystates[SDL_SCANCODE_S])
-	{
-		m_mainCamera->ProcessKeyboard(BACKWARD, deltaTime);
-	}
-	if (keystates[SDL_SCANCODE_D])
-	{
-		m_mainCamera->ProcessKeyboard(RIGHT, deltaTime);
-	}
-	if (keystates[SDL_SCANCODE_LSHIFT])
-	{
-		m_mainCamera->ProcessKeyboard(UP, deltaTime);
-	}
-	if (keystates[SDL_SCANCODE_LCTRL])
-	{
-		m_mainCamera->ProcessKeyboard(DOWN, deltaTime);
-	}
-	if (keystates[SDL_SCANCODE_UP])
-	{
-		m_entities.at(8)->GetComponent<RigidBody>()->ApplyForce(30);
-	}
-	if (keystates[SDL_SCANCODE_DOWN])
-	{
-		m_entities.at(8)->GetComponent<RigidBody>()->ApplyForce(-30);
-	}
-	if (keystates[SDL_SCANCODE_LEFT])
-	{
-		m_entities.at(8)->GetComponent<RigidBody>()->ApplyTorque(-30);
-	}
-	if (keystates[SDL_SCANCODE_RIGHT])
-	{
-		m_entities.at(8)->GetComponent<RigidBody>()->ApplyTorque(30);
-	}
-	if (keystates[SDL_SCANCODE_SPACE])
-	{
-		if (boom == false)
-		{
-			glm::vec3 explosionPoint = m_boxes[m_boxes.size() / 2]->GetTransform()->GetPosition();
-			for (int i = 0; i < m_boxes.size(); i++)
-			{
-				glm::vec3 forceVector = glm::normalize(m_boxes[i]->GetTransform()->GetPosition() - explosionPoint);
-				m_boxes[i]->GetComponent<RigidBody>()->ApplyForce(btVector3(forceVector.x, forceVector.y, forceVector.z) * 5);
-			}
-			boom = true;
-		}
-
-	}
 
 }
 

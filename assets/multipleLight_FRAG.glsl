@@ -9,6 +9,7 @@ in vec3 worldPosition;
 
 uniform sampler2D ourTexture;
 uniform vec3 lightColour[4];
+uniform vec3 attenuation[4];
 uniform vec3 viewPos;
 
 void main()
@@ -23,15 +24,17 @@ void main()
 
 	for(int i = 0; i < 4; i++)
 	{
+		float distance = length(toLightVector[i]);
+		float attenFactor = attenuation[i].x + (attenuation[i].y * distance) + (attenuation[i].z * distance * distance);
 		vec3 unitLightVector = normalize(toLightVector[i]);
 		float nDotl = dot(unitNormal, unitLightVector);
 		float brightness = max(nDotl, 0.0);
-		totalDiffuse = totalDiffuse + brightness * lightColour[i];
+		totalDiffuse = totalDiffuse + (brightness * lightColour[i]) / attenFactor;
 
 		vec3 reflectDir = reflect(-unitLightVector, unitNormal);
 		float spec = pow(max(dot(viewDir, reflectDir), 0.0), 16);
 		vec3 specular = specularStrength * spec * lightColour[i];
-		totalSpecular = totalSpecular + specular;
+		totalSpecular = totalSpecular + specular / attenFactor;
 
 	}
 	
