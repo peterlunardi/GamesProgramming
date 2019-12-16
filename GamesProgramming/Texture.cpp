@@ -48,6 +48,10 @@ GLuint Texture::Load(const std::string& directory)
 Texture::Texture(std::string path) : m_texture(Load(path)), m_directory(path)
 {
 }
+Texture::~Texture()
+{
+	
+}
 void Texture::Bind()
 {
 	glActiveTexture(GL_TEXTURE0);

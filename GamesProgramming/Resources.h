@@ -8,7 +8,8 @@
 class Resources
 {
 private:
-	//TODO: use smart pointers
+	
+
 	std::unordered_map<std::string, std::shared_ptr<ShaderProgram>> m_shaderPrograms;
 	std::unordered_map<std::string, std::shared_ptr<Model>> m_models;
 	std::unordered_map<std::string, std::shared_ptr<Texture>> m_textures;
@@ -46,7 +47,5 @@ public:
 
 	//Deletes all the things!
 	void ReleaseResources();
-
-	//TODO: Release Unused Resources
 };
 

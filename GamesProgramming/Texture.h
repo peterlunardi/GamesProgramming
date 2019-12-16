@@ -11,5 +11,6 @@ private:
 
 public:
 	Texture(std::string path);
+	~Texture();
 	void Bind();
 };

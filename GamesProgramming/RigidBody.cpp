@@ -35,9 +35,7 @@ void RigidBody::UpdateParent()
 	//and apply it to the game objects transform
 	m_entity->GetTransform()->SetRotation(glm::quat(bt.getRotation().getW(), bt.getRotation().getX(), bt.getRotation().getY(), bt.getRotation().getZ()));
 	m_entity->GetTransform()->SetPosition(glm::vec3(bt.getOrigin().getX(), bt.getOrigin().getY(), bt.getOrigin().getZ()));
-	
 
-	
 }
 
 void RigidBody::UpdateRigidBody()

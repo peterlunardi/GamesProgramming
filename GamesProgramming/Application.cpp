@@ -171,7 +171,7 @@ void Application::CreateLight(glm::vec3 position, glm::vec3 colour, glm::vec3 at
 		new MeshRenderer(
 			Resources::GetInstance()->GetModel("cube.obj"),
 			Resources::GetInstance()->GetShader("source"),
-			Resources::GetInstance()->GetTexture("penguinTex.png"))
+			Resources::GetInstance()->GetTexture("Wood.jpg"))
 	);
 	a->GetTransform()->SetPosition(position);
 	a->GetTransform()->SetScale(glm::vec3(0.5f, 0.5f, 0.5f));
@@ -182,7 +182,6 @@ void Application::GameInit()
 {
 	//loading all resources
 	Resources::GetInstance()->AddModel("cube.obj");
-	Resources::GetInstance()->AddModel("penguin.obj");
 	Resources::GetInstance()->AddModel("turkey.obj");
 	Resources::GetInstance()->AddModel("cone.obj");
 	Resources::GetInstance()->AddModel("ball.obj");
@@ -190,7 +189,6 @@ void Application::GameInit()
 	Resources::GetInstance()->AddModel("plane.obj");
 	Resources::GetInstance()->AddTexture("barrel.jpg");
 	Resources::GetInstance()->AddTexture("ball.jpg");
-	Resources::GetInstance()->AddTexture("penguinTex.png");
 	Resources::GetInstance()->AddTexture("turkey.jpg");
 	Resources::GetInstance()->AddTexture("Wood.jpg");
 	Resources::GetInstance()->AddTexture("floorTile.jpg");
